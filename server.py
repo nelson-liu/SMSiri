@@ -99,20 +99,25 @@ def weather(entities):
     
     weatherResponse = requests.get(url="http://api.openweathermap.org/data/2.5/weather?q=" + location)
     weather_dict = json.loads(weatherResponse.text) #Gets all the JSON
-    weatherWeather = weather_dict.get('weather')
-    #weatherDescription = weather_dict.get('weather').get('description')
+    weatherDescription = weather_dict.get('weather')[0].get('description')
+    temperatureInKelvin = weather_dict.get('main')[0].get('temp')
+
+    temperatureInFarenheit = kelvinToFarenheit(temperatureInKelvin)
 
     print location #Good
     print weatherResponse
     print weather_dict
-    print weatherWeather
-    #print weatherDescription
+    print weatherDescription #Good!
+    print temperatureInFarenheit
 
-    message = str(weatherWeather) + " in " + location
-    #message = str(weatherDescription) + " in " + location
+    message = "In " + location + ", the weather forecast is " + weatherDescription + " and the temperature is " + temperatureInFarenheit + " in Farenheit"
     resp = twilio.twiml.Response()
     resp.message(message)
+    print message
     return 'ok'
+
+def kelvinToFarenheight(tempInK):
+    return (tempInK - 273.15) * 1.8 + 32.0
 
 #5 Twitter Updates
 @app.route("/twitter_updates", methods=['GET', 'POST'])
