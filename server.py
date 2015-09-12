@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect
 import requests
+from requests.auth import HTTPBasicAuth
 import json
 import random
 import twilio.twiml
@@ -45,6 +46,8 @@ def recieveSMS():
         msg = stock_report(entities)
     elif intent == "activities":
         msg = activities(entities)
+    elif intent == "news":
+        msg = news(entities)
     else:
         msg = noValidIntent()
     return str(msg)
@@ -204,6 +207,30 @@ def activities(entities):
         message += " (" + str(activity.get('fromPrice'))
         message += " " + activity.get('fromPriceLabel') + ") \n"
         count += 1
+    resp = twilio.twiml.Response()
+    resp.message(message)
+    print message
+    return resp
+
+#8 Bing News
+@app.route("/news", methods=['GET', 'POST'])
+def news(entities):
+    topic = entities.get('topic')[0].get('value')
+    print topic
+    news_response = requests.get(url='https://api.datamarket.azure.com/Bing/Search/News?$format=json&Query=%27' + topic+"%27", auth=('oeToVPEyRZIASRK2n2byOU1x0EMatLIpd8kCIvwXmMw','oeToVPEyRZIASRK2n2byOU1x0EMatLIpd8kCIvwXmMw'))
+    print news_response
+    news_dict = json.loads(news_response.text)
+    news = news_dict.get('d').get('results')
+    print news
+    message = "Here are the top stories about " + topic + ":\n"
+    if len(news) >= 3:
+        for x in range(0, 2):
+            message += news[x].get('Title') + ",\n"
+        message += news[2].get('Title')
+    else:
+        for item in news:
+            message += item.get('Title') + ",\n"
+        message += item.get('Title')
     resp = twilio.twiml.Response()
     resp.message(message)
     print message
