@@ -43,6 +43,8 @@ def recieveSMS():
         twitter_updates(entities)
     elif intent == "stock_report":
         stock_report(entities)
+    elif intent == "activities":
+        activities(entities)
     else:
         noValidIntent()
     return 'ok'
@@ -187,6 +189,28 @@ def stock_report(entities):
     print message
     resp = twilio.twiml.Response()
     resp.message(message)
+    return 'ok'
+
+#7 Expedia Activities
+@app.route("/activities", methods=['GET', 'POST'])
+def activities(entities):
+    location = entities.get('location')[0].get('value')
+    print location
+    expediaResponse = requests.get(url="http://terminal2.expedia.com/x/activities/search?location="+location+"&apikey=yYTYKKUxJFqVXrc9fXduouBGThAAWQH5")
+    
+    expedia_dict = json.loads(expediaResponse.text)
+    activities = expedia_dict.get('activities')
+    message = ""
+    count = 1
+    for activity in activities:
+        message += str(count) + ". "
+        message += activity.get('title')
+        message += " (" + str(activity.get('fromPrice'))
+        message += " " + activity.get('fromPriceLabel') + ") \n"
+        count += 1
+    resp = twilio.twiml.Response()
+    resp.message(message)
+    print message
     return 'ok'
 
 # No Valid Intent Found
