@@ -152,6 +152,8 @@ def weather(entities):
     temperatureInFarenheit = kelvinToFarenheit(temperatureInKelvin)
     #degree_sign= u'\N{DEGREE SIGN}' #To get degree sign
 
+    #Fix this
+
     message = "In " + location + ", the weather forecast is " + weatherDescription + " and the temperature is " + str(temperatureInFarenheit) + " in Farenheit"
     resp = twilio.twiml.Response()
     resp.message(message)
