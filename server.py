@@ -4,6 +4,7 @@ import json
 import random
 import twilio.twiml
 import twitter
+import wolframalpha
 
 app = Flask(__name__)
 
@@ -16,9 +17,6 @@ noIntent = [
 @app.route("/", methods=['GET', 'POST'])
 def recieveSMS():
     """Respond to a text with the input (this is a temporary behavior), and decide the appropriate handler"""
-    # text_body = request.values.get('Body', None)
-    # resp = twilio.twiml.Response()
-    # resp.message(text_body)
     wit_response = requests.get(url='https://api.wit.ai/message?v=20150912&q=' + request.values.get('Body', None),headers={'Authorization': 'Bearer I4WKESB35IVVAHPAG4YVYRQ6MB26UAGG'})
     wit_dict = json.loads(wit_response.text)
     print wit_dict
@@ -29,38 +27,40 @@ def recieveSMS():
     entities = wit_dict.get('outcomes')[0].get('entities')
     print entities
 
+    msg = None
+
     if confidence < .2:
         noValidIntent()
-    elif intent == "lookup":
-        lookup(entities)
+    elif intent == "wolfram":
+        msg = wolfram(entities)
     elif intent == "navigate":
-        navigate(entities)
+        msg = navigate(entities)
     elif intent == "translate":
-        translate(entities)
+        msg = translate(entities)
     elif intent == "weather":
-        weather(entities)
+        msg = weather(entities)
     elif intent == "twitter_updates":
-        twitter_updates(entities)
+        msg = twitter_updates(entities)
     elif intent == "stock_report":
-        stock_report(entities)
+        msg = stock_report(entities)
     elif intent == "activities":
-        activities(entities)
+        msg = activities(entities)
     else:
-        noValidIntent()
-    return 'ok'
+        msg = noValidIntent()
+    return str(msg)
 
 
-#1 Lookup uses the Bing Search API
-@app.route("/lookup", methods=['GET', 'POST'])
-def lookup(entities):
-    return "temp"
-#     key = "nAiE8uvJl0LDZE0U0rqvxcIt93KFjmLcyiDF3jpk8ig"
-#     url = 'https://api.datamarket.azure.com/Data.ashx/Bing/Search/?Query=%27'+entities+'%27&$top=5&$format=json'
-#     response_data = requests.get(url)
-#     json_result = json.loads(response_data)
-#     result_list = json_result['d']['results']
-#     print result_list
-#     return result_list
+#1 uses the wolfram alpha api to retrieve results to natural language queries.
+@app.route("/wolfram", methods=['GET', 'POST'])
+def wolfram(entities):
+    question = entities.get('question')[0].get('value');
+    client = wolframalpha.Client('Y9VVR7-5A9P7Y4893')
+    res = client.query(question)
+    message = next(res.results).text
+    resp = twilio.twiml.Response()
+    resp.message(message)
+    print message
+    return resp
 
 #2 Navigate
 @app.route("/navigate", methods=['GET', 'POST'])
@@ -72,9 +72,7 @@ def navigate(entities):
     bingMaps_dict = json.loads(bingMapsResponse.text)
     resources = bingMaps_dict.get('resourceSets')[0].get('resources')
     routeLegs = resources[0].get('routeLegs')
-
     message = ""
-
     distance = routeLegs[0].get('routeSubLegs')[0].get('travelDistance')
     message += "Total Trip Distance: " + str(distance) + " km\n"
     duration = routeLegs[0].get('routeSubLegs')[0].get('travelDuration')
@@ -90,7 +88,7 @@ def navigate(entities):
     resp = twilio.twiml.Response()
     resp.message(message)
     print message
-    return 'ok'
+    return resp
 
 #3 Translate
 @app.route("/translate", methods=['GET', 'POST'])
@@ -139,13 +137,12 @@ def translate(entities):
     resp = twilio.twiml.Response()
     print message
     resp.message(message)
-    return 'ok'
+    return resp
 
 #4 Weather
 @app.route("/weather", methods=['GET', 'POST'])
 def weather(entities):
     location = entities.get('location')[0].get('value');
-    
     weatherResponse = requests.get(url="http://api.openweathermap.org/data/2.5/weather?q=" + location)
     weather_dict = json.loads(weatherResponse.text) #Gets all the JSON
     weatherDescription = weather_dict.get('weather')[0].get('description')
@@ -160,7 +157,7 @@ def weather(entities):
     resp = twilio.twiml.Response()
     resp.message(message)
     print message
-    return 'ok'
+    return resp
 
 def kelvinToFarenheit(tempInK):
     return (tempInK - 273.15) * 1.8 + 32.0
@@ -176,7 +173,7 @@ def twitter_updates(entities):
     print message
     resp = twilio.twiml.Response()
     resp.message(message)
-    return 'ok'
+    return resp
 
 #6 Stock Report
 @app.route("/stock_report", methods=['GET', 'POST'])
@@ -189,7 +186,7 @@ def stock_report(entities):
     print message
     resp = twilio.twiml.Response()
     resp.message(message)
-    return 'ok'
+    return resp
 
 #7 Expedia Activities
 @app.route("/activities", methods=['GET', 'POST'])
@@ -197,7 +194,6 @@ def activities(entities):
     location = entities.get('location')[0].get('value')
     print location
     expediaResponse = requests.get(url="http://terminal2.expedia.com/x/activities/search?location="+location+"&apikey=yYTYKKUxJFqVXrc9fXduouBGThAAWQH5")
-    
     expedia_dict = json.loads(expediaResponse.text)
     activities = expedia_dict.get('activities')
     message = ""
@@ -219,7 +215,7 @@ def uber(entities):
     resp = twilio.twiml.Response()
     resp.message(message)
     print message
-    return 'ok'
+    return resp
 
 # No Valid Intent Found
 @app.route("/noValidIntent", methods=['GET', 'POST'])
@@ -227,6 +223,7 @@ def noValidIntent():
     resp = twilio.twiml.Response()
     message = random.choice(noIntent)
     resp.message(message)
+    return resp
 
 if __name__ == "__main__":
     app.run(debug=True)
