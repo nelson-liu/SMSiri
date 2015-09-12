@@ -147,23 +147,18 @@ def weather(entities):
     weatherResponse = requests.get(url="http://api.openweathermap.org/data/2.5/weather?q=" + location)
     weather_dict = json.loads(weatherResponse.text) #Gets all the JSON
     weatherDescription = weather_dict.get('weather')[0].get('description')
-    #temperatureInKelvin = weather_dict.get('main')[0].get('temp')
+    temperatureInKelvin = weather_dict.get('main').get('temp')
 
-    #temperatureInFarenheit = kelvinToFarenheit(temperatureInKelvin)
+    temperatureInFarenheit = kelvinToFarenheit(temperatureInKelvin)
+    #degree_sign= u'\N{DEGREE SIGN}' #To get degree sign
 
-    print location #Good
-    print weatherResponse
-    print weather_dict
-    print weatherDescription #Good!
-    #print temperatureInFarenheit
-
-    message = "In " + location + ", the weather forecast is " + weatherDescription + " and the temperature is " #+ temperatureInFarenheit + " in Farenheit"
+    message = "In " + location + ", the weather forecast is " + weatherDescription + " and the temperature is " + str(temperatureInFarenheit) + " in Farenheit"
     resp = twilio.twiml.Response()
     resp.message(message)
     print message
     return 'ok'
 
-def kelvinToFarenheight(tempInK):
+def kelvinToFarenheit(tempInK):
     return (tempInK - 273.15) * 1.8 + 32.0
 
 #5 Twitter Updates
