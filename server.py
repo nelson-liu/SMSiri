@@ -99,11 +99,13 @@ def weather(entities):
     
     weatherResponse = requests.get(url="http://api.openweathermap.org/data/2.5/weather?q=" + location)
     weather_dict = json.loads(weatherResponse.text) #Gets all the JSON
-    weatherDescription = weather_dict.get('weather')
+    weatherWeather = weather_dict.get('weather')
+    weatherDescription = weatherWeather.get('description')
 
     print location
     print weatherResponse
     print weather_dict
+    print weatherWeather
     print weatherDescription
 
     message = "The " + str(weatherDescription) + " in " + location
