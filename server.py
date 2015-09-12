@@ -102,13 +102,13 @@ def weather(entities):
     weatherWeather = weather_dict.get('weather')
     weatherDescription = weatherWeather.get('description')
 
-    print location
+    print location #Good
     print weatherResponse
     print weather_dict
     print weatherWeather
     print weatherDescription
 
-    message = "The " + str(weatherDescription) + " in " + location
+    message = str(weatherDescription) + " in " + location
     resp = twilio.twiml.Response()
     resp.message(message)
     return 'ok'
