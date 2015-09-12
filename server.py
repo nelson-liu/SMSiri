@@ -3,6 +3,7 @@ import requests
 import json
 import random
 import twilio.twiml
+import twitter
 
 app = Flask(__name__)
 
@@ -44,7 +45,6 @@ def recieveSMS():
         stock_report(entities)
     else:
         noValidIntent()
-
     return 'ok'
 
 
@@ -54,10 +54,7 @@ def lookup(entities):
     return "temp"
 #     key = "nAiE8uvJl0LDZE0U0rqvxcIt93KFjmLcyiDF3jpk8ig"
 #     url = 'https://api.datamarket.azure.com/Data.ashx/Bing/Search/?Query=%27'+entities+'%27&$top=5&$format=json'
-#     request = urllib2.Request(url)
-#     request_opener = urllib2.build_opener()
-#     response = request_opener.open(request)
-#     response_data = response.read()
+#     response_data = requests.get(url)
 #     json_result = json.loads(response_data)
 #     result_list = json_result['d']['results']
 #     print result_list
@@ -71,20 +68,15 @@ def navigate(entities):
     destination = entities.get('destination')[0].get('value');
     bingMapsResponse = requests.get(url="http://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=" + origin + "&wp.1=" + destination + "&avoid=minimizeTolls&key="+key)
     bingMaps_dict = json.loads(bingMapsResponse.text)
-    # print bingMaps_dict
     resources = bingMaps_dict.get('resourceSets')[0].get('resources')
-    # print resources
     routeLegs = resources[0].get('routeLegs')
 
     message = ""
 
-    #print distance
     distance = routeLegs[0].get('routeSubLegs')[0].get('travelDistance')
     message += "Total Trip Distance: " + str(distance) + " km\n"
-    #print travel time in seconds
     duration = routeLegs[0].get('routeSubLegs')[0].get('travelDuration')
     message += "Total Trip Duration: " + str(duration/60) + " min \n"
-    #print Itinerary Iteams
     itineraryItems = routeLegs[0].get('itineraryItems')
     for item in itineraryItems:
         message += item.get('instruction').get('text') + " ("
@@ -108,12 +100,26 @@ def weather(entities):
 #5 Twitter Updates
 @app.route("/twitter_updates", methods=['GET', 'POST'])
 def twitter_updates(entities):
-    return -1 #TODO
+    username = entities.get('username')[0].get('value');
+    api = twitter.Api(consumer_key='4m8fjnhaub0s1KGb7jrcGZIKR',consumer_secret='rtohH46EgVGWVIA1BSEImdNpIkNqm7bvREttacwTGK72mxrLZK',access_token_key='2735117372-CEiN7lE00OBfqNmWlVmypzNkblwyVM3cpIGyYdy',access_token_secret='wgADPMZkEWEOqYCa8oZcpWdYJnOuTdtwjeJLC9JbvDew7')
+    statuses = api.GetUserTimeline(screen_name=username, count =1)
+    latestTweet = [s.text for s in statuses]
+    message = "@"+username+": " + latestTweet
+    resp = twilio.twiml.Response()
+    resp.message(message)
+    return 'ok'
 
 #6 Stock Report
 @app.route("/stock_report", methods=['GET', 'POST'])
 def stock_report(entities):
-    return -1 #TODO
+    company = entities.get('company')[0].get('value')
+    yahooFinanceResponse = requests.get(url="http://finance.yahoo.com/webservice/v1/symbols/"+company+"/quote?format=json")
+    yahooFinance_dict = json.loads(yahooFinanceResponse.text)
+    price = yahooFinance_dict.get('list').get('resources')[0].get('resource').get('fields').get('price')
+    message = company+" is currently at " + "$" + price +"."
+    resp = twilio.twiml.Response()
+    resp.message(message)
+    return 'ok'
 
 # No Valid Intent Found
 @app.route("/noValidIntent", methods=['GET', 'POST'])
