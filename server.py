@@ -95,9 +95,12 @@ def translate(entities):
 #4 Weather
 @app.route("/weather", methods=['GET', 'POST'])
 def weather(entities):
-    weather = entities.get('weather')[0].get('value');
-    weather_response = requests.get(url="api.openweathermap.org/data/2.5/weather?.q=" + weather)
-    print weather_response
+    location = entities.get('city name')[0].get('value');
+    weather_response = requests.get(url="api.openweathermap.org/data/2.5/weather?.q=" + location)
+    
+    message = "The weather at " + location " is " + weather_response
+    resp = twilio.twiml.Response()
+    resp.message(message)
     return 'ok'
 
 #5 Twitter Updates
