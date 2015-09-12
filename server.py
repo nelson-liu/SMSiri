@@ -103,8 +103,9 @@ def twitter_updates(entities):
     username = entities.get('username')[0].get('value');
     api = twitter.Api(consumer_key='4m8fjnhaub0s1KGb7jrcGZIKR',consumer_secret='rtohH46EgVGWVIA1BSEImdNpIkNqm7bvREttacwTGK72mxrLZK',access_token_key='2735117372-CEiN7lE00OBfqNmWlVmypzNkblwyVM3cpIGyYdy',access_token_secret='wgADPMZkEWEOqYCa8oZcpWdYJnOuTdtwjeJLC9JbvDew7')
     statuses = api.GetUserTimeline(screen_name=username, count =1)
-    latestTweet = [s.text for s in statuses]
+    latestTweet = statuses[0].text
     message = "@"+username+": " + latestTweet
+    print message
     resp = twilio.twiml.Response()
     resp.message(message)
     return 'ok'
@@ -117,6 +118,7 @@ def stock_report(entities):
     yahooFinance_dict = json.loads(yahooFinanceResponse.text)
     price = yahooFinance_dict.get('list').get('resources')[0].get('resource').get('fields').get('price')
     message = company+" is currently at " + "$" + price +"."
+    print message
     resp = twilio.twiml.Response()
     resp.message(message)
     return 'ok'
