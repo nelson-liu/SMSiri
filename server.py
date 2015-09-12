@@ -100,15 +100,16 @@ def weather(entities):
     weatherResponse = requests.get(url="http://api.openweathermap.org/data/2.5/weather?q=" + location)
     weather_dict = json.loads(weatherResponse.text) #Gets all the JSON
     weatherWeather = weather_dict.get('weather')
-    weatherDescription = weatherWeather.get('description')
+    #weatherDescription = weather_dict.get('weather').get('description')
 
     print location #Good
     print weatherResponse
     print weather_dict
     print weatherWeather
-    print weatherDescription
+    #print weatherDescription
 
-    message = str(weatherDescription) + " in " + location
+    message = str(weatherWeather) + " in " + location
+    #message = str(weatherDescription) + " in " + location
     resp = twilio.twiml.Response()
     resp.message(message)
     return 'ok'
