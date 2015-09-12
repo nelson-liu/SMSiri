@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect
+from microsofttranslator import Translator
 import requests
-from requests.auth import HTTPBasicAuth
 import json
 import random
 import twilio.twiml
@@ -16,22 +16,25 @@ noIntent = [
 ]
 
 @app.route("/", methods=['GET', 'POST'])
+# Process a received text and decide the appropriate function to call.
 def recieveSMS():
-    """Respond to a text with the input (this is a temporary behavior), and decide the appropriate handler"""
     wit_response = requests.get(url='https://api.wit.ai/message?v=20150912&q=' + request.values.get('Body', None),headers={'Authorization': 'Bearer I4WKESB35IVVAHPAG4YVYRQ6MB26UAGG'})
     wit_dict = json.loads(wit_response.text)
     print wit_dict
+
     intent = wit_dict.get('outcomes')[0].get('intent')
     print intent
+
     confidence = wit_dict.get('outcomes')[0].get('confidence')
     print confidence
+
     entities = wit_dict.get('outcomes')[0].get('entities')
     print entities
 
     msg = None
 
     if confidence < .2:
-        noValidIntent()
+        msg = noValidIntent()
     elif intent == "wolfram":
         msg = wolfram(entities)
     elif intent == "navigate":
@@ -50,23 +53,28 @@ def recieveSMS():
         msg = news(entities)
     else:
         msg = noValidIntent()
+
     return str(msg)
 
 
-#1 uses the wolfram alpha api to retrieve results to natural language queries.
 @app.route("/wolfram", methods=['GET', 'POST'])
+# Use the wolfram|alpha API to retrieve results to natural language queries.
+# This is a bit unstable, there exists the possibility of the response not having a
+# 'results' pod, which then causes an error. Use with caution.
 def wolfram(entities):
     question = entities.get('question')[0].get('value');
     client = wolframalpha.Client('Y9VVR7-5A9P7Y4893')
     res = client.query(question)
     message = next(res.results).text
+
     resp = twilio.twiml.Response()
     resp.message(message)
     print message
     return resp
 
-#2 Navigate
 @app.route("/navigate", methods=['GET', 'POST'])
+# Use the Bing Maps API to generate step by step driving directions from a given
+# start point and end point.
 def navigate(entities):
     key = "GSC5hkB0CEmUyk4nI2MY~HxNEzo1P1bHB1sX8EzDJpA~AmYeCHqvBerEI06DBSKWfo4pgB1w9Krgk7EH6lhGqqf3s5RaJArOzWJ-SL6AYVVw"
     origin = entities.get('origin')[0].get('value');
@@ -93,8 +101,9 @@ def navigate(entities):
     print message
     return resp
 
-#3 Translate
 @app.route("/translate", methods=['GET', 'POST'])
+# Use the Microsoft Translator API to translate given text from one language
+# to another.
 def translate(entities):
     phrase_to_translate = entities.get('phrase_to_translate')[0].get('value')
     message = ""
@@ -134,7 +143,6 @@ def translate(entities):
         else:
             message = "Language not supported"
     if message != "Language not supported":
-        from microsofttranslator import Translator
         translator = Translator('SMSAssistant', 'fhV+AdYFiK0QfQ4PFys+oQ/T0xiBBVQa32kxxbP55Ks=')
         message = translator.translate(phrase_to_translate, language)
     resp = twilio.twiml.Response()
@@ -142,8 +150,8 @@ def translate(entities):
     resp.message(message)
     return resp
 
-#4 Weather
 @app.route("/weather", methods=['GET', 'POST'])
+# Use the OpenWeatherMap API to get the weather at a location.
 def weather(entities):
     location = entities.get('location')[0].get('value');
     weatherResponse = requests.get(url="http://api.openweathermap.org/data/2.5/weather?q=" + location)
@@ -165,8 +173,8 @@ def weather(entities):
 def kelvinToFarenheit(tempInK):
     return (tempInK - 273.15) * 1.8 + 32.0
 
-#5 Twitter Updates
 @app.route("/twitter_updates", methods=['GET', 'POST'])
+# Use the Twitter API to get the most recent tweet of a public user.
 def twitter_updates(entities):
     username = entities.get('username')[0].get('value');
     api = twitter.Api(consumer_key='4m8fjnhaub0s1KGb7jrcGZIKR',consumer_secret='rtohH46EgVGWVIA1BSEImdNpIkNqm7bvREttacwTGK72mxrLZK',access_token_key='2735117372-CEiN7lE00OBfqNmWlVmypzNkblwyVM3cpIGyYdy',access_token_secret='wgADPMZkEWEOqYCa8oZcpWdYJnOuTdtwjeJLC9JbvDew7')
@@ -178,8 +186,8 @@ def twitter_updates(entities):
     resp.message(message)
     return resp
 
-#6 Stock Report
 @app.route("/stock_report", methods=['GET', 'POST'])
+# Use the Yahoo Finance API to get the most recent stock price of a given symbol.
 def stock_report(entities):
     company = entities.get('company')[0].get('value')
     yahooFinanceResponse = requests.get(url="http://finance.yahoo.com/webservice/v1/symbols/"+company+"/quote?format=json")
@@ -191,8 +199,8 @@ def stock_report(entities):
     resp.message(message)
     return resp
 
-#7 Expedia Activities
 @app.route("/activities", methods=['GET', 'POST'])
+# Use the Expedia Activities API to get a list of fun activities to do near a location.
 def activities(entities):
     location = entities.get('location')[0].get('value')
     print location
@@ -212,8 +220,8 @@ def activities(entities):
     print message
     return resp
 
-#8 Bing News
 @app.route("/news", methods=['GET', 'POST'])
+# Use the Bing Search News API to get a listing of recent headlines pertaining to a certain topic.
 def news(entities):
     topic = entities.get('topic')[0].get('value')
     print topic
@@ -236,8 +244,8 @@ def news(entities):
     print message
     return resp
 
-# No Valid Intent Found
 @app.route("/noValidIntent", methods=['GET', 'POST'])
+# No valid intent was found, so an error message will be texted back.
 def noValidIntent():
     resp = twilio.twiml.Response()
     message = random.choice(noIntent)
