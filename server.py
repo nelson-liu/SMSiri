@@ -103,7 +103,10 @@ def translate(entities):
 #4 Weather
 @app.route("/weather", methods=['GET', 'POST'])
 def weather(entities):
-    return -1 #TODO
+    weather = entities.get('weather')[0].get('value');
+    weather_response = requests.get(url="api.openweathermap.org/data/2.5/weather?.q=" + weather)
+    print weather_response
+    return 'ok'
 
 #5 Twitter Updates
 @app.route("/twitter_updates", methods=['GET', 'POST'])
