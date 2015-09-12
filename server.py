@@ -98,7 +98,7 @@ def weather(entities):
     location = entities.get('location')[0].get('value');
     weather_response = requests.get(url="http://api.openweathermap.org/data/2.5/weather?.q=" + location)
     weather_dict = json.loads(weather_response.text)
-    weather = weather_dict.get('list').get('location')[0]
+    weather = weather_dict.get('list').get('location')[0] #Confirm if this works with Nelson
     
     message = "The weather at " + location + " is " + weather
     resp = twilio.twiml.Response()
