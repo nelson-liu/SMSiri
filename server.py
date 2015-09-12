@@ -78,19 +78,66 @@ def navigate(entities):
     duration = routeLegs[0].get('routeSubLegs')[0].get('travelDuration')
     message += "Total Trip Duration: " + str(duration/60) + " min \n"
     itineraryItems = routeLegs[0].get('itineraryItems')
+    count = 1
     for item in itineraryItems:
-        message += item.get('instruction').get('text') + " ("
+        message += str(count) + ". " + item.get('instruction').get('text') + " ("
         message += str(item.get('travelDistance')) + " km, "
         message += str(item.get('travelDuration') / 60 ) + " min)"
         message += "\n"
+        count +=1
     resp = twilio.twiml.Response()
     resp.message(message)
+    print message
     return 'ok'
 
 #3 Translate
 @app.route("/translate", methods=['GET', 'POST'])
 def translate(entities):
-    return -1 #TODO
+    phrase_to_translate = entities.get('phrase_to_translate')[0].get('value')
+    message = ""
+    if entities.get('language') == None:
+        message = "Language not supported"
+    else:
+        language = entities.get('language')[0].get('value')
+        language = language.lower()
+        if language == "chinese":
+            language = "zh-CHS"
+        elif language == "dutch":
+            language = "nl"
+        elif language == "english":
+            language = "en"
+        elif language == "french":
+            language = "fr"
+        elif language == "german":
+            language = "de"
+        elif language == "italian":
+            language = "it"
+        elif language == "japanese":
+            language = "ja"
+        elif language == "korean":
+            language = "ko"
+        elif language == "portuguese":
+            language = "pt"
+        elif language == "russian":
+            language = "ru"
+        elif language == "spanish":
+            language = "es"
+        elif language == "swedish":
+            language = "sv"
+        elif language == "thai":
+            language = "th"
+        elif language == "vietnamese":
+            language = "vi"
+        else:
+            message = "Language not supported"
+    if message != "Language not supported":
+        from microsofttranslator import Translator
+        translator = Translator('SMSAssistant', 'fhV+AdYFiK0QfQ4PFys+oQ/T0xiBBVQa32kxxbP55Ks=')
+        message = translator.translate(phrase_to_translate, language)
+    resp = twilio.twiml.Response()
+    print message
+    resp.message(message)
+    return 'ok'
 
 #4 Weather
 @app.route("/weather", methods=['GET', 'POST'])
@@ -125,8 +172,9 @@ def twitter_updates(entities):
     username = entities.get('username')[0].get('value');
     api = twitter.Api(consumer_key='4m8fjnhaub0s1KGb7jrcGZIKR',consumer_secret='rtohH46EgVGWVIA1BSEImdNpIkNqm7bvREttacwTGK72mxrLZK',access_token_key='2735117372-CEiN7lE00OBfqNmWlVmypzNkblwyVM3cpIGyYdy',access_token_secret='wgADPMZkEWEOqYCa8oZcpWdYJnOuTdtwjeJLC9JbvDew7')
     statuses = api.GetUserTimeline(screen_name=username, count =1)
-    latestTweet = [s.text for s in statuses]
+    latestTweet = statuses[0].text
     message = "@"+username+": " + latestTweet
+    print message
     resp = twilio.twiml.Response()
     resp.message(message)
     return 'ok'
@@ -139,6 +187,7 @@ def stock_report(entities):
     yahooFinance_dict = json.loads(yahooFinanceResponse.text)
     price = yahooFinance_dict.get('list').get('resources')[0].get('resource').get('fields').get('price')
     message = company+" is currently at " + "$" + price +"."
+    print message
     resp = twilio.twiml.Response()
     resp.message(message)
     return 'ok'
