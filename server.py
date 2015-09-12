@@ -78,11 +78,13 @@ def navigate(entities):
     duration = routeLegs[0].get('routeSubLegs')[0].get('travelDuration')
     message += "Total Trip Duration: " + str(duration/60) + " min \n"
     itineraryItems = routeLegs[0].get('itineraryItems')
+    count = 1
     for item in itineraryItems:
-        message += item.get('instruction').get('text') + " ("
+        message += str(count) + ". " + item.get('instruction').get('text') + " ("
         message += str(item.get('travelDistance')) + " km, "
         message += str(item.get('travelDuration') / 60 ) + " min)"
         message += "\n"
+        count +=1
     resp = twilio.twiml.Response()
     resp.message(message)
     print message
