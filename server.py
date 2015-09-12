@@ -213,6 +213,14 @@ def activities(entities):
     print message
     return 'ok'
 
+#8 Uber Activities
+@app.route("/uber", methods=['GET', 'POST'])
+def uber(entities):
+    resp = twilio.twiml.Response()
+    resp.message(message)
+    print message
+    return 'ok'
+
 # No Valid Intent Found
 @app.route("/noValidIntent", methods=['GET', 'POST'])
 def noValidIntent():
