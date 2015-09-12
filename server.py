@@ -44,7 +44,7 @@ def recieveSMS():
 #1 Lookup uses the Bing Search API
 @app.route("/lookup", methods=['GET', 'POST'])
 def lookup(entities):
-    key = nAiE8uvJl0LDZE0U0rqvxcIt93KFjmLcyiDF3jpk8ig
+    key = 'nAiE8uvJl0LDZE0U0rqvxcIt93KFjmLcyiDF3jpk8ig'
     url = 'https://api.datamarket.azure.com/Data.ashx/Bing/Search/'+'?Query=%27'+entities+'%27&$top=5&$format=json'
     request = urllib2.Request(url)
     request_opener = urllib2.build_opener()
@@ -58,6 +58,26 @@ def lookup(entities):
 #2 Navigate
 @app.route("/navigate", methods=['GET', 'POST'])
 def navigate(entities):
+    return -1 #TODO
+
+#3 Translate
+@app.route("/translate", methods=['GET', 'POST'])
+def translate(entities):
+    return -1 #TODO
+
+#4 Weather
+@app.route("/weather", methods=['GET', 'POST'])
+def weather(entities):
+    return -1 #TODO
+
+#5 Twitter Updates
+@app.route("/twitter_updates", methods=['GET', 'POST'])
+def twitter_updates(entities):
+    return -1 #TODO
+
+#6 Stock Report
+@app.route("/stock_report", methods=['GET', 'POST'])
+def stock_report(entities):
     return -1 #TODO
 
 # No Valid Intent Found
