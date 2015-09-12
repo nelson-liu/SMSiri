@@ -95,6 +95,26 @@ def navigate(entities):
     resp.message(message)
     return 'ok'
 
+#3 Translate
+@app.route("/translate", methods=['GET', 'POST'])
+def translate(entities):
+    return -1 #TODO
+
+#4 Weather
+@app.route("/weather", methods=['GET', 'POST'])
+def weather(entities):
+    return -1 #TODO
+
+#5 Twitter Updates
+@app.route("/twitter_updates", methods=['GET', 'POST'])
+def twitter_updates(entities):
+    return -1 #TODO
+
+#6 Stock Report
+@app.route("/stock_report", methods=['GET', 'POST'])
+def stock_report(entities):
+    return -1 #TODO
+
 # No Valid Intent Found
 @app.route("/noValidIntent", methods=['GET', 'POST'])
 def noValidIntent():
