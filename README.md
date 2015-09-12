@@ -1,11 +1,20 @@
 # SMSAssistant
 Project @ MHacks 6 -- An SMS based natural language question and answer system.
 
-Lookup
-Navigate
-Translate
-Weather
-Twitter Updates
-Stock Reports
-Wolfram to do math
-Uber?
+1) Lookup
+
+2) Navigate
+
+3) Translate
+
+4) Weather
+
+5) Twitter Updates
+
+6) Stock Reports
+
+7) Wolfram to do math
+
+8) Expedia?
+
+9) Uber?
