@@ -8,6 +8,7 @@ import twitter
 import wolframalpha
 
 app = Flask(__name__)
+app.debug=True
 
 noIntent = [
     "I'm having trouble understanding you, could you rephrase your question?",
