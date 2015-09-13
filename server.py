@@ -169,7 +169,7 @@ def weather(entities):
 
     # print degree_sign
 
-    message = "In " + location + ", the weather forecast is " + weatherDescription + " and the temperature is " + str(temperatureInFarenheit) + " " + degree_sign + "F"
+    message = "The weather in " + location + ": " + weatherDescription + " " + str(temperatureInFarenheit) + " " + degree_sign + "F"
     resp = twilio.twiml.Response()
     resp.message(message)
     # print message
