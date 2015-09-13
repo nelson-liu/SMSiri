@@ -33,7 +33,7 @@ def recieveSMS():
 
     msg = None
 
-    if confidence < .2:
+    if confidence < .3:
         msg = noValidIntent()
     elif intent == "wolfram":
         msg = wolfram(entities)
@@ -112,33 +112,33 @@ def translate(entities):
     else:
         language = entities.get('language')[0].get('value')
         language = language.lower()
-        if language == "chinese":
+        if language == "chinese" or language == "zh-CHS":
             language = "zh-CHS"
-        elif language == "dutch":
+        elif language == "dutch" or language == "nl":
             language = "nl"
-        elif language == "english":
+        elif language == "english" or language == "en":
             language = "en"
-        elif language == "french":
+        elif language == "french" or language == "fr":
             language = "fr"
-        elif language == "german":
+        elif language == "german" or language == "de":
             language = "de"
-        elif language == "italian":
+        elif language == "italian" or language == "it":
             language = "it"
-        elif language == "japanese":
+        elif language == "japanese" or language == "ja":
             language = "ja"
-        elif language == "korean":
+        elif language == "korean" or language == "ko":
             language = "ko"
-        elif language == "portuguese":
+        elif language == "portuguese" or language == "pt":
             language = "pt"
-        elif language == "russian":
+        elif language == "russian" or language == "ru":
             language = "ru"
-        elif language == "spanish":
+        elif language == "spanish" or language == "es":
             language = "es"
-        elif language == "swedish":
+        elif language == "swedish" or language == "sv":
             language = "sv"
-        elif language == "thai":
+        elif language == "thai" or language == "th":
             language = "th"
-        elif language == "vietnamese":
+        elif language == "vietnamese" or language == "vi":
             language = "vi"
         else:
             message = "Language not supported"
@@ -209,11 +209,11 @@ def activities(entities):
     activities = expedia_dict.get('activities')
     message = ""
     count = 1
-    for activity in activities:
+    for x in range(0, 3):
         message += str(count) + ". "
-        message += activity.get('title')
-        message += " (" + str(activity.get('fromPrice'))
-        message += " " + activity.get('fromPriceLabel') + ") \n"
+        message += activities[x].get('title')
+        message += " (" + str(activities[x].get('fromPrice'))
+        message += " " + activities[x].get('fromPriceLabel') + ") \n"
         count += 1
     resp = twilio.twiml.Response()
     resp.message(message)
