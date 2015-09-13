@@ -2,10 +2,10 @@ from flask import Flask, request, redirect
 # from microsofttranslator import Translator
 # import requests
 # import json
-# import random
-# import twilio.twiml
-# import twitter
-# import wolframalpha
+import random
+import twilio.twiml
+import twitter
+import wolframalpha
 
 app = Flask(__name__)
 
