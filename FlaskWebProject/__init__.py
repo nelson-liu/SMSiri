@@ -9,56 +9,54 @@ import wolframalpha
 
 app = Flask(__name__)
 
-# noIntent = [
-#     "I'm having trouble understanding you, could you rephrase your question?",
-#     "I didn't catch that, could you rephrase your query?",
-#     "Sorry, I didn't understand that. Try rephrasing your request."
-# ]
-#
+noIntent = [
+    "I'm having trouble understanding you, could you rephrase your question?",
+    "I didn't catch that, could you rephrase your query?",
+    "Sorry, I didn't understand that. Try rephrasing your request."
+]
+
 @app.route("/", methods=['GET', 'POST'])
-def hello():
-    return "Hello World!"
-# # Process a received text and decide the appropriate function to call.
-# def recieveSMS():
-#     wit_response = requests.get(url='https://api.wit.ai/message?v=20150912&q=' + request.values.get('Body', None),headers={'Authorization': 'Bearer I4WKESB35IVVAHPAG4YVYRQ6MB26UAGG'})
-#     wit_dict = json.loads(wit_response.text)
-#     print wit_dict
-#
-#     intent = wit_dict.get('outcomes')[0].get('intent')
-#     print intent
-#
-#     confidence = wit_dict.get('outcomes')[0].get('confidence')
-#     print confidence
-#
-#     entities = wit_dict.get('outcomes')[0].get('entities')
-#     print entities
-#
-#     msg = None
-#
-#     if confidence < .2:
-#         msg = noValidIntent()
-#     elif intent == "wolfram":
-#         msg = wolfram(entities)
-#     elif intent == "navigate":
-#         msg = navigate(entities)
-#     elif intent == "translate":
-#         msg = translate(entities)
-#     elif intent == "weather":
-#         msg = weather(entities)
-#     elif intent == "twitter_updates":
-#         msg = twitter_updates(entities)
-#     elif intent == "stock_report":
-#         msg = stock_report(entities)
-#     elif intent == "activities":
-#         msg = activities(entities)
-#     elif intent == "news":
-#         msg = news(entities)
-#     else:
-#         msg = noValidIntent()
-#
-#     return str(msg)
-#
-#
+# Process a received text and decide the appropriate function to call.
+def recieveSMS():
+    wit_response = requests.get(url='https://api.wit.ai/message?v=20150912&q=' + request.values.get('Body', None),headers={'Authorization': 'Bearer I4WKESB35IVVAHPAG4YVYRQ6MB26UAGG'})
+    wit_dict = json.loads(wit_response.text)
+    print wit_dict
+
+    intent = wit_dict.get('outcomes')[0].get('intent')
+    print intent
+
+    confidence = wit_dict.get('outcomes')[0].get('confidence')
+    print confidence
+
+    entities = wit_dict.get('outcomes')[0].get('entities')
+    print entities
+
+    msg = None
+
+    if confidence < .2:
+        msg = noValidIntent()
+    elif intent == "wolfram":
+        msg = wolfram(entities)
+    elif intent == "navigate":
+        msg = navigate(entities)
+    elif intent == "translate":
+        msg = translate(entities)
+    elif intent == "weather":
+        msg = weather(entities)
+    elif intent == "twitter_updates":
+        msg = twitter_updates(entities)
+    elif intent == "stock_report":
+        msg = stock_report(entities)
+    elif intent == "activities":
+        msg = activities(entities)
+    elif intent == "news":
+        msg = news(entities)
+    else:
+        msg = noValidIntent()
+
+    return str(msg)
+
+
 # @app.route("/wolfram", methods=['GET', 'POST'])
 # # Use the wolfram|alpha API to retrieve results to natural language queries.
 # # This is a bit unstable, there exists the possibility of the response not having a
