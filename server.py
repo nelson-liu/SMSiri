@@ -15,7 +15,7 @@ noIntent = [
     "Sorry, I didn't understand that. Try rephrasing your request."
 ]
 
-@app.route("/receiveSMS", methods=['GET', 'POST'])
+@app.route("/receiveSMS", methods=['POST'])
 # Process a received text and decide the appropriate function to call.
 def recieveSMS():
     wit_response = requests.get(url='https://api.wit.ai/message?v=20150912&q=' + request.values.get('Body', None),headers={'Authorization': 'Bearer I4WKESB35IVVAHPAG4YVYRQ6MB26UAGG'})
@@ -57,7 +57,7 @@ def recieveSMS():
     return str(msg)
 
 
-@app.route("/wolfram", methods=['GET', 'POST'])
+@app.route("/wolfram", methods=['POST'])
 # Use the wolfram|alpha API to retrieve results to natural language queries.
 # This is a bit unstable, there exists the possibility of the response not having a
 # 'results' pod, which then causes an error. Use with caution.
@@ -72,7 +72,7 @@ def wolfram(entities):
     # print message
     return resp
 
-@app.route("/navigate", methods=['GET', 'POST'])
+@app.route("/navigate", methods=['POST'])
 # Use the Bing Maps API to generate step by step driving directions from a given
 # start point and end point.
 def navigate(entities):
@@ -101,7 +101,7 @@ def navigate(entities):
     # print message
     return resp
 
-@app.route("/translate", methods=['GET', 'POST'])
+@app.route("/translate", methods=['POST'])
 # Use the Microsoft Translator API to translate given text from one language
 # to another.
 def translate(entities):
@@ -150,7 +150,7 @@ def translate(entities):
     resp.message(message)
     return resp
 
-@app.route("/weather", methods=['GET', 'POST'])
+@app.route("/weather", methods=['POST'])
 # Use the OpenWeatherMap API to get the weather at a location.
 def weather(entities):
     location = entities.get('location')[0].get('value');
@@ -174,7 +174,7 @@ def weather(entities):
 def kelvinToFarenheit(tempInK):
     return (tempInK - 273.15) * 1.8 + 32.0
 
-@app.route("/twitter_updates", methods=['GET', 'POST'])
+@app.route("/twitter_updates", methods=['POST'])
 # Use the Twitter API to get the most recent tweet of a public user.
 def twitter_updates(entities):
     username = entities.get('username')[0].get('value');
@@ -187,7 +187,7 @@ def twitter_updates(entities):
     resp.message(message)
     return resp
 
-@app.route("/stock_report", methods=['GET', 'POST'])
+@app.route("/stock_report", methods=['POST'])
 # Use the Yahoo Finance API to get the most recent stock price of a given symbol.
 def stock_report(entities):
     company = entities.get('company')[0].get('value')
@@ -200,7 +200,7 @@ def stock_report(entities):
     resp.message(message)
     return resp
 
-@app.route("/activities", methods=['GET', 'POST'])
+@app.route("/activities", methods=['POST'])
 # Use the Expedia Activities API to get a list of fun activities to do near a location.
 def activities(entities):
     location = entities.get('location')[0].get('value')
@@ -220,7 +220,7 @@ def activities(entities):
     resp.message(message)
     return resp
 
-@app.route("/news", methods=['GET', 'POST'])
+@app.route("/news", methods=['POST'])
 # Use the Bing Search News API to get a listing of recent headlines pertaining to a certain topic.
 def news(entities):
     topic = entities.get('topic')[0].get('value')
@@ -244,7 +244,7 @@ def news(entities):
     # print message
     return resp
 
-@app.route("/noValidIntent", methods=['GET', 'POST'])
+@app.route("/noValidIntent", methods=['POST'])
 # No valid intent was found, so an error message will be texted back.
 def noValidIntent():
     resp = twilio.twiml.Response()
