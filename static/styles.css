@@ -25,6 +25,11 @@ h6 {
     font-size: 14px;
 }
 
+#about {
+  text-align: center;
+  font-size: 18px;
+}
+
 .lead {
     font-size: 18px;
     font-weight: 400;
@@ -35,19 +40,18 @@ h6 {
     padding-bottom: 50px;
     text-align: center;
     color: #f8f8f8;
-    background: url(../img/cse.jpg) no-repeat center center;
-    background-size: cover;
+    background-color: #1abc9c;
 }
 
 .intro-message {
+    position: relative;
     padding-top: 20%;
     padding-bottom: 20%;
-    color: black;
-    font-family: Helvetica;
 }
 
 .intro-message > h1 {
     margin: 0;
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
     font-size: 5em;
 }
 
@@ -58,7 +62,7 @@ h6 {
 }
 
 .intro-message > h3 {
-  color: #707273;
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
 }
 
 @media(max-width:767px) {
@@ -74,6 +78,7 @@ h6 {
         display: block;
         margin-bottom: 20px;
         padding: 0;
+        text-shadow: none;
     }
 
     ul.intro-social-buttons > li:last-child {
