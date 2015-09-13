@@ -43,3 +43,11 @@ virtualenv==1.11.6
 Werkzeug==0.9.6
 wget==2.2
 wolframalpha==1.2
+cffi==1.2.1
+cryptography==1.0.1
+enum34==1.0.4
+idna==2.0 
+ipaddress==1.0.14
+ndg-httpsclient==0.4.0
+pycparser==2.14
+pyopenssl==0.15.1
