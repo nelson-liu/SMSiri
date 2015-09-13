@@ -19,6 +19,7 @@ noIntent = [
 # Process a received text and decide the appropriate function to call.
 def recieveSMS():
     wit_response = requests.get(url='https://api.wit.ai/message?v=20150912&q=' + request.values.get('Body', None),headers={'Authorization': 'Bearer I4WKESB35IVVAHPAG4YVYRQ6MB26UAGG'})
+    return wit_response
     wit_dict = json.loads(wit_response.text)
     print wit_dict
 
