@@ -35,7 +35,6 @@ simplejson==3.8.0
 singledispatch==3.4.0.3
 six==1.9.0
 termcolor==1.1.0
-tornado==4.0.2
 tweetstream==1.1.1
 twilio==4.5.0
 update-checker==0.11
