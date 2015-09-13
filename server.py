@@ -218,7 +218,7 @@ def activities(entities):
         count += 1
     resp = twilio.twiml.Response()
     resp.message(message)
-    print message
+    # print message
     return resp
 
 @app.route("/news", methods=['GET', 'POST'])
