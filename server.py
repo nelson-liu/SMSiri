@@ -160,8 +160,8 @@ def weather(entities):
     temperatureInKelvin = weather_dict.get('main').get('temp')
 
     temperatureInFarenheit = kelvinToFarenheit(temperatureInKelvin)
-    # degree_sign= u'\N{DEGREE SIGN}' #To get degree sign
-    degree_sign= "*"
+    degree_sign= u'\N{DEGREE SIGN}' #To get degree sign
+    # degree_sign= "*"
 
     # print degree_sign
 
