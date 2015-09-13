@@ -20,16 +20,16 @@ noIntent = [
 def recieveSMS():
     wit_response = requests.get(url='https://api.wit.ai/message?v=20150912&q=' + request.values.get('Body', None),headers={'Authorization': 'Bearer I4WKESB35IVVAHPAG4YVYRQ6MB26UAGG'})
     wit_dict = json.loads(wit_response.text)
-    print wit_dict
+    # print wit_dict
 
     intent = wit_dict.get('outcomes')[0].get('intent')
-    print intent
+    # print intent
 
     confidence = wit_dict.get('outcomes')[0].get('confidence')
-    print confidence
+    # print confidence
 
     entities = wit_dict.get('outcomes')[0].get('entities')
-    print entities
+    # print entities
 
     msg = None
 
@@ -69,7 +69,7 @@ def wolfram(entities):
 
     resp = twilio.twiml.Response()
     resp.message(message)
-    print message
+    # print message
     return resp
 
 @app.route("/navigate", methods=['GET', 'POST'])
@@ -98,7 +98,7 @@ def navigate(entities):
         count +=1
     resp = twilio.twiml.Response()
     resp.message(message)
-    print message
+    # print message
     return resp
 
 @app.route("/translate", methods=['GET', 'POST'])
@@ -146,7 +146,7 @@ def translate(entities):
         translator = Translator('SMSAssistant', 'fhV+AdYFiK0QfQ4PFys+oQ/T0xiBBVQa32kxxbP55Ks=')
         message = translator.translate(phrase_to_translate, language)
     resp = twilio.twiml.Response()
-    print message
+    # print message
     resp.message(message)
     return resp
 
@@ -168,7 +168,7 @@ def weather(entities):
     message = "In " + location + ", the weather forecast is " + weatherDescription + " and the temperature is " + str(temperatureInFarenheit) + " " + degree_sign + "F"
     resp = twilio.twiml.Response()
     resp.message(message)
-    print message
+    # print message
     return resp
 
 def kelvinToFarenheit(tempInK):
@@ -182,7 +182,7 @@ def twitter_updates(entities):
     statuses = api.GetUserTimeline(screen_name=username, count =1)
     latestTweet = statuses[0].text
     message = "@"+username+": " + latestTweet
-    print message
+    # print message
     resp = twilio.twiml.Response()
     resp.message(message)
     return resp
@@ -195,7 +195,7 @@ def stock_report(entities):
     yahooFinance_dict = json.loads(yahooFinanceResponse.text)
     price = yahooFinance_dict.get('list').get('resources')[0].get('resource').get('fields').get('price')
     message = company+" is currently at " + "$" + price +"."
-    print message
+    # print message
     resp = twilio.twiml.Response()
     resp.message(message)
     return resp
@@ -204,7 +204,7 @@ def stock_report(entities):
 # Use the Expedia Activities API to get a list of fun activities to do near a location.
 def activities(entities):
     location = entities.get('location')[0].get('value')
-    print location
+    # print location
     expediaResponse = requests.get(url="http://terminal2.expedia.com/x/activities/search?location="+location+"&apikey=yYTYKKUxJFqVXrc9fXduouBGThAAWQH5")
     expedia_dict = json.loads(expediaResponse.text)
     activities = expedia_dict.get('activities')
@@ -218,19 +218,18 @@ def activities(entities):
         count += 1
     resp = twilio.twiml.Response()
     resp.message(message)
-    # print message
     return resp
 
 @app.route("/news", methods=['GET', 'POST'])
 # Use the Bing Search News API to get a listing of recent headlines pertaining to a certain topic.
 def news(entities):
     topic = entities.get('topic')[0].get('value')
-    print topic
+    # print topic
     news_response = requests.get(url='https://api.datamarket.azure.com/Bing/Search/News?$format=json&Query=%27' + topic+"%27", auth=('oeToVPEyRZIASRK2n2byOU1x0EMatLIpd8kCIvwXmMw','oeToVPEyRZIASRK2n2byOU1x0EMatLIpd8kCIvwXmMw'))
-    print news_response
+    # print news_response
     news_dict = json.loads(news_response.text)
     news = news_dict.get('d').get('results')
-    print news
+    # print news
     message = "Here are the top stories about " + topic + ":\n"
     if len(news) >= 3:
         for x in range(0, 2):
@@ -242,7 +241,7 @@ def news(entities):
         message += item.get('Title')
     resp = twilio.twiml.Response()
     resp.message(message)
-    print message
+    # print message
     return resp
 
 @app.route("/noValidIntent", methods=['GET', 'POST'])
