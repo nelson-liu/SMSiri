@@ -17,7 +17,6 @@ MarkupSafe==0.23
 mechanize==0.2.5
 microsofttranslator==0.7
 mutagen==1.29
-numpy==1.9.0
 oauthlib==1.0.3
 pathlib==1.0.1
 pep8==1.6.2
