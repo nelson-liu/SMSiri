@@ -15,7 +15,7 @@ noIntent = [
     "Sorry, I didn't understand that. Try rephrasing your request."
 ]
 
-@app.route("/recieveSMS", methods=['GET', 'POST'])
+@app.route("/receiveSMS", methods=['GET', 'POST'])
 # Process a received text and decide the appropriate function to call.
 def recieveSMS():
     wit_response = requests.get(url='https://api.wit.ai/message?v=20150912&q=' + request.values.get('Body', None),headers={'Authorization': 'Bearer I4WKESB35IVVAHPAG4YVYRQ6MB26UAGG'})
