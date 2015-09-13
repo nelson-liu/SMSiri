@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, url_for
 from microsofttranslator import Translator
 import requests
 import json
@@ -14,6 +14,10 @@ noIntent = [
     "I didn't catch that, could you rephrase your query?",
     "Sorry, I didn't understand that. Try rephrasing your request."
 ]
+
+@app.route('/')
+def home():
+    return redirect(url_for('static', filename='index.html'))
 
 @app.route("/receiveSMS", methods=['POST'])
 # Process a received text and decide the appropriate function to call.
