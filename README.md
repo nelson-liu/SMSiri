@@ -1,5 +1,5 @@
 # SMSiri
-Making "dumb phones" smarter through natural language question answering. Ask us a question by texting (714) 500-7689! Visit us at our [website](http://www.smsiri.co/static/index.html) to learn more about SMSiri's functions. To use smsiri: point your Twilio request url to http://smsiri.herokuapp.com/receiveSMS. As of October 11th, SMSiri has been taken offline.
+Making "dumb phones" smarter through natural language question answering. Ask us a question by texting (714) 500-7689! Visit us at our [website](http://www.smsiri.co/static/index.html) to learn more about SMSiri's functions. To use smsiri: point your Twilio request url to http://smsiri.herokuapp.com/receiveSMS.
 
 ## Developers
 Built by:
