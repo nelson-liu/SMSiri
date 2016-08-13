@@ -9,5 +9,5 @@ Built by:
 at MHacks VI.
 
 ## Links
-* [Website](http://www.smsiri.co/static/index.html)
+* [Website](http://nelsonliu.me/smsiri)
 * [DevPost](http://devpost.com/software/smsiri)
